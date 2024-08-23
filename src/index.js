@@ -1,7 +1,8 @@
-import express from 'express';
-import sequelize from '../config/database.js';
-import routes from '../routes/index.js';
-import dotenv from 'dotenv';
+import express from 'express'
+import sequelize from '../config/database.js'
+import routes from '../routes/index.js'
+import dotenv from 'dotenv'
+import db from '../models/index.js'
 
 // Cargar variables desde .env
 dotenv.config();
@@ -10,22 +11,22 @@ dotenv.config();
 const port = process.env.PORT || 3000;
 
 
-const app = express();
+const app = express()
 
-app.use(express.json());
-app.use('/api', routes);
+app.use(express.json())
+app.use('/api', routes)
 
 const startServer = async () => {
   try {
-    await sequelize.authenticate();
-    console.log('Database connected...');
-    
+    await sequelize.authenticate()
+    console.log('Database connected...')
+    db.sequelize.sync({ alter: true })
     app.listen(port, () => {
-      console.log('Server is running on http://localhost:3000');
-    });
+      console.log('Server is running on http://localhost:3000')
+    })
   } catch (error) {
-    console.error('Unable to connect to the database:', error);
+    console.error('Unable to connect to the database:', error)
   }
-};
+}
 
 startServer();
