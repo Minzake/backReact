@@ -16,16 +16,17 @@ const port = process.env.PORT || 3000
 const app = express()
 
 app.use(express.json())
-app.use(cors())
-app.options('*', cors())
-app.use('/api', routes)
+app.use('/api',cors(), routes)
+app.get('/api/cors', (req, res) => {
+  res.json({ message: 'CORS enabled!' });
+});
 
 const startServer = async () => {
   try {
     await sequelize.authenticate()
     console.log('Database connected...')
 
-    db.sequelize.sync({ alter: true })
+    db.sequelize.sync({ alter: true, force: false })
 
     app.listen(port, () => {
       console.log(`Server is running on http://localhost:${port}`)

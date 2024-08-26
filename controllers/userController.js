@@ -1,8 +1,11 @@
 import db from '../models/index.js'
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv'
 
+dotenv.config()
 const User = db.User
-
+const jwtSecret = process.env.JWT_SECRET || 'jwt'
 export class UserController {
   createUser = async (req, res) => {
     try {
@@ -22,9 +25,12 @@ export class UserController {
       if (!await bcrypt.compare(password, result.password)) {
         throw error
       }
-      res.status(201).json({ message: 'Usuario logueado', success: true, token: 'asdasdasd' })
+      const payload = { id: result.id, username: result.username }
+      const token = jwt.sign(payload, jwtSecret, { expiresIn: '1h' })
+
+      res.status(201).json({ message: 'Usuario logueado', success: true, token })
     } catch (error) {
-      res.status(500).json({ message: 'Usuario|Contraseña invalida', success: false })
+      res.status(500).json({ message: 'Usuario o Contraseña invalida', success: false })
     }
   }
 }
