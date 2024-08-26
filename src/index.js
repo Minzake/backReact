@@ -4,6 +4,7 @@ import routes from '../routes/index.js'
 import dotenv from 'dotenv'
 import db from '../models/index.js'
 import cors from 'cors'
+import passport from '../passport-config.js';
 
 // Cargar variables desde .env
 dotenv.config()
@@ -17,6 +18,7 @@ const app = express()
 
 app.use(express.json())
 app.use('/api',cors(), routes)
+app.use(passport.initialize());
 app.get('/api/cors', (req, res) => {
   res.json({ message: 'CORS enabled!' });
 });
