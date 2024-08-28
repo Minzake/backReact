@@ -15,8 +15,8 @@ const port = process.env.PORT || 3000
 
 
 const app = express()
-
 app.use(express.json())
+app.use(cors())
 app.use('/api',cors(), routes)
 app.use(passport.initialize());
 app.get('/api/cors', (req, res) => {
